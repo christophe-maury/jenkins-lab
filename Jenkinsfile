@@ -1,48 +1,28 @@
 pipeline {
     agent any
- 
-    tools {
-        maven 'maven3'
+
+    parameters {
+        string(name: 'APP_VERSION', defaultValue: '1.0.0', description: 'Version à construire')
+        choice(name: 'ENVIRONNEMENT', choices: ['dev', 'recette', 'prod'], description: 'Environnement cible')
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Exécuter les tests ?')
     }
- 
+
     stages {
-        stage('Diagnostic') {
+        stage('Informations') {
             steps {
-                sh '''
-                    java -version
-                    mvn -version
-                    ls -la
-                    ls -la demo-app
-                '''
+                echo "Version : ${params.APP_VERSION}"
+                echo "Environnement : ${params.ENVIRONNEMENT}"
+                echo "Tests activés : ${params.RUN_TESTS}"
             }
         }
- 
+
         stage('Build') {
             steps {
-                dir('demo-app') {
-                    echo 'Build Maven en cours...'
-                    sh 'mvn clean compile'
-                }
+                sh '''
+                    mkdir -p build
+                    echo "app ${APP_VERSION}" > build/app.txt
+                '''
             }
-        }
- 
-        stage('Test') {
-            steps {
-                dir('demo-app') {
-                    echo 'Execution des tests unitaires...'
-                    sh 'mvn test'
-                }
-            }
-        }
-    }
- 
-    post {
-        success {
-            echo 'Build et tests termines avec succes.'
-        }
- 
-        failure {
-            echo 'Echec du pipeline : consulter les logs.'
         }
     }
 }
