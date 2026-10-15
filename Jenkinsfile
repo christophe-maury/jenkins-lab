@@ -28,7 +28,7 @@ pipeline {
             steps {
                 echo 'Exécution des tests simulés...'
                 sh 'test -f build/resultat.txt && echo "Test OK"'
-                 echo 'test vraiment simulé...'
+                 echo 'test vraiment simulé....'
             }
         }
 
