@@ -18,10 +18,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh '''
-                    mkdir -p build
-                    echo "app ${APP_VERSION}" > build/app.txt
-                '''
+                echo "Tests activés : ${params.RUN_TESTS}"
             }
         }
     }
